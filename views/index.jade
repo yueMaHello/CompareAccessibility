@@ -1,0 +1,29 @@
+//- include main.html
+extends layout
+
+block content
+    header
+      h1= title
+    section(id = 'section1')
+      label(class="switch")
+        input(type="checkbox" id = "interact")
+        span(class="slider")
+      div(id = "map" class="map")
+      //- div(id="viewDiv")
+    section(id='section2')
+      label(class="switch")
+        input(type="checkbox" id = "interact2")
+        span(class="slider")
+      div(id = 'map2')
+      //- div(id="viewDiv2")
+    section(id = 'controlPanel')
+      input(type='button' id='subtractButton' value="See difference")
+      
+    script.
+
+      console.log($('#map').attr('id'))
+      //pass data to frontend from backend
+    script.
+      var title = !{JSON.stringify(title)};
+    script(src="/javascripts/heatmapTest.js")
+    script(src="/javascripts/test.js")
