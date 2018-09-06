@@ -1,5 +1,5 @@
-# General Heatmap
-This is a Nodejs web application using Arcgis Javascript API. It is a simple tool which can be modified to display any zone-to-zone matrix.
+# Side By Side Map
+This is a Nodejs web application using Arcgis Javascript API. It can display two map side by side at the same time.
 ## Set Up:
 #### From Github:
 1. If you haven't downloaded Nodejs on your computer, you need to download it and add it into PATH.
