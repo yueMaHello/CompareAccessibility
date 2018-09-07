@@ -1,0 +1,41 @@
+//- include main.html
+extends layout
+
+block content
+    header
+        h1= title
+
+    div(class ="container-fluid")
+        div(class ="row")
+            div(class ="col-md-6 col-sm-6")
+
+                h3 Left Map
+                label(for="leftPurpose") Select Travel Purpose:
+                select(id = 'leftPurpose' class="form-control")
+                    option Please Select
+                    option Work
+                    option Post Secondary Education
+                    //option Grade School
+                    option Other (All)
+                    option Other (By Purpose)
+                div(id = 'leftDynamic')
+
+
+            div(class ="col-md-6 col-sm-6")
+                h3 Right Map
+                label(for="rightPurpose") Select Travel Purpose:
+                select(id = 'rightPurpose' class="form-control")
+                    option Please Select
+                    option Work
+                    option Post Secondary Education
+                    //option Grade School
+                    option Other (All)
+                    option Other (By Purpose)
+                div(id = 'rightDynamic')
+
+    input(id = 'SubmitButton' type='button' class="btn btn-secondary btn-lg" value = 'Submit')
+    script.
+        console.log($('#map').attr('id'))
+
+        var title = !{JSON.stringify(title)};
+    script(src="/javascripts/selection.js")

@@ -14,13 +14,16 @@ function walkfolders(dir) {
     return filelist;
 }
 var csvFileList = walkfolders('./public/data');
-var appName = csvFileList[0].split('.csv')[0];
+
+
+router.get('/viewmap', function(req, res, next) {
+    res.render('index', { title: "Compare Accessibility"});
+});
 
 router.get('/', function(req, res, next) {
-    res.render('index', { title: appName});
+    res.render('selection', { title: "Compare Accessibility"});
 });
-router.get('/difference', function(req, res, next) {
-    res.render('differenceMap', { title: appName});
-});
+
+
 
 module.exports = router;
