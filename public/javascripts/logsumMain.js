@@ -18,16 +18,27 @@ var hoverZone2; //mouse-over zone
 var difference = false;
 
 $('#wait').show();
-q.defer(d3.csv,csvFileName)
-    .defer(d3.csv,csvFileName2)
-    .await(brushMap);
+if(csvFileName!==csvFileName2){
+    q.defer(d3.csv,csvFileName)
+     .defer(d3.csv,csvFileName2)
+     .await(brushMap);
 
-
+}
+else{
+    q.defer(d3.csv,csvFileName)
+        .await(brushMap);
+}
 function brushMap(error,csvFile1,csvFile2){
     $('#title1').text(url[1].split('&')[0]+' '+url[1].split('&')[1].split('.')[0].split('Logsum')[1]);
     $('#title2').text(url[2].split('&')[0]+' '+url[2].split('&')[1].split('.')[0].split('Logsum')[1]);
-    dataMatrix = buildMatrixLookup(csvFile1);
-    dataMatrix2 = buildMatrixLookup(csvFile2);
+    if(typeof(csvFile2)==='undefined'){
+        dataMatrix2 = dataMatrix = buildMatrixLookup(csvFile1);
+    }
+    else{
+        dataMatrix = buildMatrixLookup(csvFile1);
+        dataMatrix2 = buildMatrixLookup(csvFile2);
+    }
+
     $('#wait').hide();
     require([
         "esri/geometry/Polyline",
@@ -167,9 +178,6 @@ function brushMap(error,csvFile1,csvFile2){
         }
 
         function rightMap(){
-
-
-
             var popup2 = new Popup({
                 fillSymbol:
                     new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
@@ -296,6 +304,8 @@ function brushMap(error,csvFile1,csvFile2){
                     $('#title2').text($('#title1').text()+' - '+$('#title2').text());
                     $('#section1').hide();
                     $('#section2').width("100%");
+                    $('#map2').height('100%');
+                    $('#subtractButton').hide();
                     difference = true;
                     largestIndividualArray = findRangeForIndividualCalcultion();
                     sort = Object.values(largestIndividualArray).sort((prev,next)=>prev-next); //from smallest to largest

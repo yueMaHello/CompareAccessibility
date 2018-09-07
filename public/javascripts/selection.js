@@ -20,9 +20,8 @@ var nameDictionary = {
 
 
 };
-var leftselection = {
+var selection = {
     'Selecting':null,
-
     'Work':{
         'Income':null,
         'Car':null,
@@ -41,27 +40,8 @@ var leftselection = {
 
 
 };
-var rightselection = {
-    'Selecting':null,
-
-    'Work':{
-        'Income':null,
-        'Car':null,
-    },
-    'Post Secondary Education':{
-        'Car':null
-    },
-    'Other (All)':{
-        'Car':null
-    },
-    'Other (By Purpose)':{
-        'Purpose':null,
-        'Car':null
-    },
-
-
-
-};
+var leftselection =JSON.parse(JSON.stringify(selection));
+var rightselection =JSON.parse(JSON.stringify(selection));
 
 
 $('#leftPurpose').on('change',function(){
@@ -220,13 +200,9 @@ $('#rightPurpose').on('change',function(){
             "<option>PB</option>" +
             "<option>PUDO</option>" +
             "<option>QS</option>" +
-
             "<option>Rec</option>" +
-
             "<option>Shop</option>" +
             "<option>Soc</option>" +
-
-
             "</select>");
         $('#rightDynamic').append("<label for='rightOtherCar'> Select Auto Ownership:\n</label><select id = 'rightOtherCar' class='form-control'>" +
             "<option>Please Select</option>" +
@@ -250,14 +226,37 @@ $('#SubmitButton').on('click',function(){
     var leftCSV = checkAndReturnValue(leftselection);
     var rightCSV=checkAndReturnValue(rightselection);
     if(typeof(leftCSV)!=='undefined'&&typeof(rightCSV)!=='undefined'){
-        window.location.href = '/viewmap?#'+nameDictionary[leftselection['Selecting']]+'&'+leftCSV+'#'+nameDictionary[rightselection['Selecting']]+'&'+rightCSV;
+
+        BootstrapDialog.show({
+            title:'Choose View',
+            message: 'Please select a view type!',
+            buttons: [{
+
+                label: 'Logsum',
+                // no title as it is optional
+
+                action: function(){
+                    window.location.href = '/viewLogsum?#'+nameDictionary[leftselection['Selecting']]+'&'+leftCSV+'#'+nameDictionary[rightselection['Selecting']]+'&'+rightCSV;
+
+                }
+            },  {
+                label: 'Accessibility',
+                action: function(dialogItself){
+                    window.location.href = '/viewAccessibility?#'+nameDictionary[leftselection['Selecting']]+'&'+leftCSV+'#'+nameDictionary[rightselection['Selecting']]+'&'+rightCSV;
+                }
+            }, {
+                label: 'Close',
+                action: function(dialogRef){
+                    dialogRef.close();
+                }
+            }]
+        });
 
     }
 
 
 });
 function checkAndReturnValue(s){
-    console.log(s)
     if(s['Selecting'] === null || s['Selecting']==='Please Select'){
 
         alert('Please select a travel purpose');

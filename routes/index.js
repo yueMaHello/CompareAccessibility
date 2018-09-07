@@ -16,8 +16,12 @@ function walkfolders(dir) {
 var csvFileList = walkfolders('./public/data');
 
 
-router.get('/viewmap', function(req, res, next) {
-    res.render('index', { title: "Compare Accessibility"});
+router.get('/viewLogsum', function(req, res, next) {
+    res.render('indexLogsum', { title: "Compare Accessibility"});
+});
+
+router.get('/viewAccessibility', function(req, res, next) {
+    res.render('indexAccessibility', { title: "Compare Accessibility"});
 });
 
 router.get('/', function(req, res, next) {
