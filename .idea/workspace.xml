@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="899e5cbc-189c-49bf-ba87-5736ec67466a" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/public/javascripts/test.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/javascripts/accessibiliyMain.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/javascripts/accessibiliyMain.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/javascripts/test.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/indexAccessibility.jade" beforeDir="false" afterPath="$PROJECT_DIR$/views/indexAccessibility.jade" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/indexLogsum.jade" beforeDir="false" afterPath="$PROJECT_DIR$/views/indexLogsum.jade" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -28,11 +28,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="accessibiliyMain.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="accessibiliyMain.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/javascripts/accessibiliyMain.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="552">
-              <caret line="197" lean-forward="true" selection-start-line="197" selection-end-line="197" />
+            <state relative-caret-position="66">
+              <caret line="225" selection-start-line="225" selection-end-line="259" selection-end-column="9" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -40,11 +40,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="indexLogsum.jade" pinned="false" current-in-tab="false">
+      <file leaf-file-name="indexLogsum.jade" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/views/indexLogsum.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="110">
-              <caret line="5" column="6" selection-start-line="5" selection-start-column="6" selection-end-line="5" selection-end-column="6" />
+            <state relative-caret-position="616">
+              <caret line="28" column="33" selection-start-line="28" selection-start-column="33" selection-end-line="28" selection-end-column="33" />
             </state>
           </provider>
         </entry>
@@ -73,8 +73,20 @@
       <file leaf-file-name="logsumMain.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/javascripts/logsumMain.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="478">
-              <caret line="248" column="111" lean-forward="true" selection-start-line="248" selection-start-column="111" selection-end-line="248" selection-end-column="111" />
+            <state relative-caret-position="286">
+              <caret line="310" column="7" selection-start-line="310" selection-start-column="7" selection-end-line="328" selection-end-column="45" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="test.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/javascripts/test.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="308">
+              <caret line="113" column="46" selection-start-line="113" selection-start-column="46" selection-end-line="113" selection-end-column="46" />
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -87,8 +99,8 @@
       <file leaf-file-name="indexAccessibility.jade" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/views/indexAccessibility.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="616">
-              <caret line="28" column="45" selection-start-line="28" selection-start-column="29" selection-end-line="28" selection-end-column="45" />
+            <state relative-caret-position="572">
+              <caret line="26" lean-forward="true" selection-start-line="26" selection-end-line="26" />
             </state>
           </provider>
         </entry>
@@ -166,11 +178,11 @@
         <option value="$PROJECT_DIR$/routes/index.js" />
         <option value="$PROJECT_DIR$/views/layout.jade" />
         <option value="$PROJECT_DIR$/public/javascripts/selection.js" />
-        <option value="$PROJECT_DIR$/views/indexLogsum.jade" />
         <option value="$PROJECT_DIR$/public/javascripts/logsumMain.js" />
-        <option value="$PROJECT_DIR$/public/javascripts/test.js" />
         <option value="$PROJECT_DIR$/views/indexAccessibility.jade" />
         <option value="$PROJECT_DIR$/public/javascripts/accessibiliyMain.js" />
+        <option value="$PROJECT_DIR$/public/javascripts/test.js" />
+        <option value="$PROJECT_DIR$/views/indexLogsum.jade" />
       </list>
     </option>
   </component>
@@ -217,12 +229,6 @@
               <item name="compareAccessibility" type="462c0819:PsiDirectoryNode" />
               <item name="public" type="462c0819:PsiDirectoryNode" />
               <item name="javascripts" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="compareAccessibility" type="b2602c69:ProjectViewProjectNode" />
-              <item name="compareAccessibility" type="462c0819:PsiDirectoryNode" />
-              <item name="public" type="462c0819:PsiDirectoryNode" />
-              <item name="stylesheets" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="compareAccessibility" type="b2602c69:ProjectViewProjectNode" />
@@ -290,12 +296,12 @@
       <workItem from="1536183282661" duration="4749000" />
       <workItem from="1536266452243" duration="4603000" />
       <workItem from="1536339174853" duration="19002000" />
-      <workItem from="1536594483069" duration="5085000" />
+      <workItem from="1536594483069" duration="6382000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="64729000" />
+    <option name="totallyTimeSpent" value="66026000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -325,6 +331,11 @@
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <option name="time" value="1" />
+    </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/public/javascripts/selection.js">
@@ -539,13 +550,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/views/indexLogsum.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="5" column="6" selection-start-line="5" selection-start-column="6" selection-end-line="5" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/javascripts/selection.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-3944">
@@ -553,37 +557,44 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/javascripts/test.js">
+    <entry file="file://$PROJECT_DIR$/public/javascripts/accessibiliyMain.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="10" column="60" lean-forward="true" selection-end-line="314" selection-end-column="1" />
+        <state relative-caret-position="66">
+          <caret line="225" selection-start-line="225" selection-end-line="259" selection-end-column="9" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/indexAccessibility.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="616">
-          <caret line="28" column="45" selection-start-line="28" selection-start-column="29" selection-end-line="28" selection-end-column="45" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/javascripts/logsumMain.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="478">
-          <caret line="248" column="111" lean-forward="true" selection-start-line="248" selection-start-column="111" selection-end-line="248" selection-end-column="111" />
+        <state relative-caret-position="286">
+          <caret line="310" column="7" selection-start-line="310" selection-start-column="7" selection-end-line="328" selection-end-column="45" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/javascripts/accessibiliyMain.js">
+    <entry file="file://$PROJECT_DIR$/views/indexAccessibility.jade">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="552">
-          <caret line="197" lean-forward="true" selection-start-line="197" selection-end-line="197" />
+        <state relative-caret-position="572">
+          <caret line="26" lean-forward="true" selection-start-line="26" selection-end-line="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/javascripts/test.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="308">
+          <caret line="113" column="46" selection-start-line="113" selection-start-column="46" selection-end-line="113" selection-end-column="46" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/indexLogsum.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="616">
+          <caret line="28" column="33" selection-start-line="28" selection-start-column="33" selection-end-line="28" selection-end-column="33" />
         </state>
       </provider>
     </entry>

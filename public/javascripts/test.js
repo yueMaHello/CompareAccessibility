@@ -14,9 +14,9 @@ var mapProperties = {
     'map':null,
     'csvFileName':null,
     'dataMatrix': null,
-    'reverseDataMatrix':null,
     'check':false,
     'hoverZone':null,
+    'selectZone':'101',
     'mapDivId':null,
     'interactButtonId':null,
     'travelZoneLayer':null,
@@ -25,12 +25,11 @@ var mapProperties = {
 
 };
 var leftMapProperties = JSON.parse(JSON.stringify(mapProperties));
-var rightMapProperties = JSON.parse(JSON.stringify(mapProperties));
-
 leftMapProperties.csvFileName = '../data/'+url[1].split('&')[0]+'/'+url[1].split('&')[1];
 leftMapProperties.mapDivId='map';
 leftMapProperties.interactButtonId = 'interact';
 
+var rightMapProperties = JSON.parse(JSON.stringify(mapProperties));
 rightMapProperties.csvFileName = '../data/'+url[2].split('&')[0]+'/'+url[2].split('&')[1];
 rightMapProperties.mapDivId='map2';
 rightMapProperties.interactButtonId = 'interact2';
@@ -40,32 +39,23 @@ if(leftMapProperties.csvFileName!==rightMapProperties.csvFileName ){ //if datase
     q.defer(d3.csv,leftMapProperties.csvFileName)
         .defer(d3.csv,rightMapProperties.csvFileName )
         .await(brushMap);
-
 }
 else{//if datasets are the same
     q.defer(d3.csv,leftMapProperties.csvFileName)
         .await(brushMap);
 }
-
 function brushMap(error,csvFile1,csvFile2){
-    $('#title1').text(url[1].split('&')[0]+' '+url[1].split('&')[1].split('.')[0].split('Logsum')[1]); //left map title
-    $('#title2').text(url[2].split('&')[0]+' '+url[2].split('&')[1].split('.')[0].split('Logsum')[1]); // right map title
+    $('#title1').text(url[1].split('&')[0]+' '+url[1].split('&')[1].split('.')[0].split('Logsum')[1]);
+    $('#title2').text(url[2].split('&')[0]+' '+url[2].split('&')[1].split('.')[0].split('Logsum')[1]);
     if(typeof(csvFile2)==='undefined'){//if two datasets are different
-        var result = buildMatrixLookup(csvFile1);
-        leftMapProperties.dataMatrix = rightMapProperties.dataMatrix = result[0];
-        leftMapProperties.reverseDataMatrix = rightMapProperties.reverseDataMatrix = result[1];
+        leftMapProperties.dataMatrix = rightMapProperties.dataMatrix =buildMatrixLookup(csvFile1);
     }
     else{//if two datasets are same
-        var result1 = buildMatrixLookup(csvFile1);
-        leftMapProperties.dataMatrix = result1[0];
-        leftMapProperties.reverseDataMatrix = result1[1];
-
-        var result2 = buildMatrixLookup(csvFile2);
-        rightMapProperties.dataMatrix = result2[0];
-        rightMapProperties.reverseDataMatrix = result2[1]
+        leftMapProperties.dataMatrix =buildMatrixLookup(csvFile1);
+        rightMapProperties.dataMatrix = buildMatrixLookup(csvFile2);
     }
 
-    $('#wait').hide();//finish loading datasets
+    $('#wait').hide();
     require([
         "esri/geometry/Polyline",
         "esri/geometry/Extent",
@@ -91,7 +81,7 @@ function brushMap(error,csvFile1,csvFile2){
         /*
         Plot left map.
          */
-        function plotMap(mapProperties){
+        function plotMap(mapProperties) {
             var popup = new Popup({
                 fillSymbol:
                     new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
@@ -102,7 +92,7 @@ function brushMap(error,csvFile1,csvFile2){
                 basemap: "dark-gray-vector",
                 center: [-113.4909, 53.5444],
                 zoom: 9,
-                minZoom:6,
+                minZoom: 6,
                 infoWindow: popup,
                 slider: false
             });
@@ -110,70 +100,75 @@ function brushMap(error,csvFile1,csvFile2){
 
 
             //travelZonelayer
-            mapProperties.travelZoneLayer = new FeatureLayer("https://services8.arcgis.com/FCQ1UtL7vfUUEwH7/arcgis/rest/services/newestTAZ/FeatureServer/0",{
+            mapProperties.travelZoneLayer = new FeatureLayer("https://services8.arcgis.com/FCQ1UtL7vfUUEwH7/arcgis/rest/services/newestTAZ/FeatureServer/0", {
                 mode: FeatureLayer.MODE_SNAPSHOT,
                 outFields: ["*"],
 
             });
             //LRT layer
-            mapProperties.lrtFeatureLayer = new FeatureLayer("https://services8.arcgis.com/FCQ1UtL7vfUUEwH7/arcgis/rest/services/LRT/FeatureServer/0",{
+            mapProperties.lrtFeatureLayer = new FeatureLayer("https://services8.arcgis.com/FCQ1UtL7vfUUEwH7/arcgis/rest/services/LRT/FeatureServer/0", {
                 mode: FeatureLayer.MODE_SNAPSHOT,
                 outFields: ["*"],
             });
             //click on travelZoneLayer event
-            mapProperties.travelZoneLayer.on('click',function(evt){
+            mapProperties.travelZoneLayer.on('click', function (evt) {
+                var graphic = evt.graphic;
+                mapProperties.selectZone = graphic.attributes.TAZ_New;
                 var query = new Query();
                 query.geometry = pointToExtent(mapProperties.map, event.mapPoint, 10);
                 var deferred = mapProperties.travelZoneLayer.selectFeatures(query,
                     mapProperties.travelZoneLayer.SELECTION_NEW);
                 mapProperties.map.infoWindow.setFeatures([deferred]);
                 mapProperties.map.infoWindow.show(event.mapPoint);
-            });
-            //mouse over event. Show an infowindow with accessibility value
-            mapProperties.travelZoneLayer.on('mouse-over',function(evt){
+                mapProperties.travelZoneLayer.redraw();
+            })
+            //mouse over event
+            mapProperties.travelZoneLayer.on('mouse-over', function (evt) {
                 var graphic = evt.graphic;
                 mapProperties.hoverZone = graphic.attributes.TAZ_New;
                 var access;
-                if(mapProperties.check === false){
-                    access = mapProperties.dataMatrix[mapProperties.hoverZone];
+                if (mapProperties.check === false) {
+                    access = mapProperties.dataMatrix[mapProperties.selectZone][mapProperties.hoverZone];
                 }
-                else{
-                    access = mapProperties.reverseDataMatrix[mapProperties.hoverZone];
+                else {
+                    access = mapProperties.dataMatrix[mapProperties.hoverZone][mapProperties.selectZone];
                 }
 
-                mapProperties.map.infoWindow.setTitle("<b>Zone Number: </b>"+mapProperties.hoverZone);
-                if(typeof(access)!=='undefined'){
-                    mapProperties.map.infoWindow.setContent("<b><font size=\"3\"> Value:</font> </b>"+ "<font size=\"4\">"+access.toFixed(2)+"</font>");
+                mapProperties.map.infoWindow.setTitle("<b>Zone Number: </b>" + mapProperties.hoverZone);
+                if (typeof(access) !== 'undefined') {
+                    mapProperties.map.infoWindow.setContent("<b><font size=\"3\"> Value:</font> </b>" + "<font size=\"4\">" + access.toFixed(2) + "</font>");
                 }
-                else{
-                    mapProperties.map.infoWindow.setContent("<b><font size=\"3\"> Value:</font> </b>"+ "<font size=\"4\">"+'undefined'+"</font>");
+                else {
+                    mapProperties.map.infoWindow.setContent("<b><font size=\"3\"> Value:</font> </b>" + "<font size=\"4\">" + 'undefined' + "</font>");
                 }
-                mapProperties.map.infoWindow.show(evt.screenPoint,mapProperties.map.getInfoWindowAnchor(evt.screenPoint));
+                mapProperties.map.infoWindow.show(evt.screenPoint, mapProperties.map.getInfoWindowAnchor(evt.screenPoint));
             });
-
-            sort =  Object.values(leftMapProperties.dataMatrix).sort(function(a, b){return a - b});
+            //adjust the legend range dynamically based on current matrix
+            var largestIndividualArray = findRangeForIndividualCalcultion();
+            sort = Object.values(largestIndividualArray).sort((prev, next) => prev - next); //from smallest to largest
+            sort = sort.map(x => x.toFixed(2)); //make legend to 2 decimal numbers.
 
             var symbol = new SimpleFillSymbol();
-            mapProperties.renderer = new ClassBreaksRenderer(symbol, function(feature){
-                if(mapProperties.check === false){
-                    return mapProperties.dataMatrix[feature.attributes.TAZ_New];
+            mapProperties.renderer = new ClassBreaksRenderer(symbol, function (feature) {
+                if (mapProperties.check === false) {
+                    return mapProperties.dataMatrix[mapProperties.selectZone][feature.attributes.TAZ_New];
                 }
-                else{
-                    return mapProperties.reverseDataMatrix[feature.attributes.TAZ_New];
+                else {
+                    return mapProperties.dataMatrix[feature.attributes.TAZ_New][mapProperties.selectZone];
                 }
             });
-
+            //legend. If you want to change legend scale or legend color, this part of code needs to be modified
             mapProperties.renderer=changeRender(mapProperties.renderer);
             mapProperties.travelZoneLayer.setRenderer(mapProperties.renderer);
             //legend
-            mapProperties.map.on('load',function(){
+            mapProperties.map.on('load', function () {
                 mapProperties.map.addLayer(mapProperties.travelZoneLayer);
                 mapProperties.map.addLayer(mapProperties.lrtFeatureLayer);
                 mapProperties.travelZoneLayer.redraw();
             });
 
 
-            function pointToExtent (map, point, toleranceInPixel) {
+            function pointToExtent(map, point, toleranceInPixel) {
                 var pixelWidth = map.extent.getWidth() / map.width;
                 var toleranceInMapCoords = toleranceInPixel * pixelWidth;
                 return new Extent(point.x - toleranceInMapCoords,
@@ -198,8 +193,6 @@ function brushMap(error,csvFile1,csvFile2){
 
         }
 
-
-        //Apply render to the map. If you want to change legend scale or legend color, this part of code needs to be modified
         function changeRender(renderer){
             var chunkZones = 89;
             renderer.addBreak(-Infinity, sort[chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([255, 255, 255,0.90])));
@@ -235,27 +228,24 @@ function brushMap(error,csvFile1,csvFile2){
                 $('#section2').width("100%");
                 $('#section2').height("95%");
 
+                $('#'+rightMapProperties.mapDivId).height('100%');
+                $('#subtractButton').hide();
                 difference = true;
-                var list = {};
-                for(var k in leftMapProperties.dataMatrix){
-                    list[k] = leftMapProperties.dataMatrix[k]-rightMapProperties.dataMatrix[k]
-
-                }
-                sort =  Object.values(list).sort(function(a, b){return a - b});
-
+                var largestIndividualArray = findRangeForIndividualCalcultion();
+                sort = Object.values(largestIndividualArray).sort((prev,next)=>prev-next); //from smallest to largest
+                sort = sort.map(x =>x.toFixed(2)); //make legend to 2 decimal numbers.
                 var symbol = new SimpleFillSymbol();
                 rightMapProperties.renderer = new ClassBreaksRenderer(symbol, function(feature){
                     if(rightMapProperties.check === false){
-                        return leftMapProperties.dataMatrix[feature.attributes.TAZ_New]-rightMapProperties.dataMatrix[feature.attributes.TAZ_New];
+                        return leftMapProperties.dataMatrix[rightMapProperties.selectZone][feature.attributes.TAZ_New]-rightMapProperties.dataMatrix[rightMapProperties.selectZone][feature.attributes.TAZ_New];
                     }
                     else{
-                        return leftMapProperties.reverseDataMatrix[feature.attributes.TAZ_New]-rightMapProperties.reverseDataMatrix[feature.attributes.TAZ_New];
+                        return leftMapProperties.dataMatrix[feature.attributes.TAZ_New][rightMapProperties.selectZone]-rightMapProperties.dataMatrix[feature.attributes.TAZ_New][rightMapProperties.selectZone];
                     }
                 });
                 rightMapProperties.renderer=changeRender(rightMapProperties.renderer);
                 rightMapProperties.travelZoneLayer.setRenderer(rightMapProperties.renderer);
                 rightMapProperties.travelZoneLayer.redraw();
-
             });
         }
     });
@@ -263,43 +253,31 @@ function brushMap(error,csvFile1,csvFile2){
 }
 
 //convert csv array into good format(zone-to-zone).
-//read csv file into a 2d matrix
 function buildMatrixLookup(arr) {
     var lookup = {};
-    var logsumOfLogsum = {};
-    var reverseLogsumOfLogsum={};
     var index = arr.columns;
     var verbal = index[0];
-
     for(var i =0; i<arr.length;i++){
         var k = arr[i][verbal];
         delete arr[i][verbal];
         lookup[parseInt(k)] = Object.keys(arr[i]).reduce((obj, key) => (obj[parseInt(key)] = Number(arr[i][key]),obj), {});
     }
 
-    for(var i in lookup){
-        var total = 0;
-        var reverseTotal = 0
-
-        for(var j in lookup[i]){
-
-            total += Math.exp(lookup[i][j]);
-            reverseTotal += Math.exp(lookup[j][i]);
+    return lookup;
+}
+//the legend range is based on the data for zone101
+//you can change it to other algorithm
+function findRangeForIndividualCalcultion(){
+    if(difference){
+        var list = {};
+        for(var k in leftMapProperties.dataMatrix['101']){
+            list[k] = leftMapProperties.dataMatrix['101'][k]-rightMapProperties.dataMatrix['101'][k]
 
         }
-
-        logsumOfLogsum[i] =  getBaseLog(2.718,total);
-        reverseLogsumOfLogsum[i] = getBaseLog(2.718,reverseTotal);
+        return list;
     }
-
-    return [logsumOfLogsum,reverseLogsumOfLogsum];
+    return leftMapProperties.dataMatrix['101'];
 }
-
-function getBaseLog(x, y) {
-    return Math.log(y) / Math.log(x);
-}
-
-
 if( window.history && window.history.pushState ){
 
     history.pushState( "nohb", null, "" );
