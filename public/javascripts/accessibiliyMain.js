@@ -9,7 +9,6 @@ var url = window.location.href.split('#');
 var q = d3.queue();
 var sort = [];//store the left map's zone[101] sorted data as legend reference
 var difference = false;//Record 'See Difference' button status
-
 var mapProperties = {
     'map':null,
     'csvFileName':null,
@@ -22,15 +21,13 @@ var mapProperties = {
     'travelZoneLayer':null,
     'lrtFeatureLayer':null,
     'renderer':null
-
 };
 var leftMapProperties = JSON.parse(JSON.stringify(mapProperties));
-var rightMapProperties = JSON.parse(JSON.stringify(mapProperties));
-
 leftMapProperties.csvFileName = '../data/'+url[1].split('&')[0]+'/'+url[1].split('&')[1];
 leftMapProperties.mapDivId='map';
 leftMapProperties.interactButtonId = 'interact';
 
+var rightMapProperties = JSON.parse(JSON.stringify(mapProperties));
 rightMapProperties.csvFileName = '../data/'+url[2].split('&')[0]+'/'+url[2].split('&')[1];
 rightMapProperties.mapDivId='map2';
 rightMapProperties.interactButtonId = 'interact2';
@@ -40,7 +37,6 @@ if(leftMapProperties.csvFileName!==rightMapProperties.csvFileName ){ //if datase
     q.defer(d3.csv,leftMapProperties.csvFileName)
         .defer(d3.csv,rightMapProperties.csvFileName )
         .await(brushMap);
-
 }
 else{//if datasets are the same
     q.defer(d3.csv,leftMapProperties.csvFileName)
@@ -85,7 +81,6 @@ function brushMap(error,csvFile1,csvFile2){
                 ClassBreaksRenderer,
                 Color
     ) {
-
         plotMap(leftMapProperties);
         plotMap(rightMapProperties);
         /*
@@ -107,8 +102,6 @@ function brushMap(error,csvFile1,csvFile2){
                 slider: false
             });
             mapProperties.map.setInfoWindowOnClick(true);
-
-
             //travelZonelayer
             mapProperties.travelZoneLayer = new FeatureLayer("https://services8.arcgis.com/FCQ1UtL7vfUUEwH7/arcgis/rest/services/newestTAZ/FeatureServer/0",{
                 mode: FeatureLayer.MODE_SNAPSHOT,
@@ -192,13 +185,9 @@ function brushMap(error,csvFile1,csvFile2){
                 else{
                     mapProperties.check= false;
                     mapProperties.travelZoneLayer.redraw();
-
                 }
             });
-
         }
-
-
         //Apply render to the map. If you want to change legend scale or legend color, this part of code needs to be modified
         function changeRender(renderer){
             var chunkZones = 89;
@@ -242,7 +231,6 @@ function brushMap(error,csvFile1,csvFile2){
 
                 }
                 sort =  Object.values(list).sort(function(a, b){return a - b});
-
                 var symbol = new SimpleFillSymbol();
                 rightMapProperties.renderer = new ClassBreaksRenderer(symbol, function(feature){
                     if(rightMapProperties.check === false){
@@ -255,43 +243,33 @@ function brushMap(error,csvFile1,csvFile2){
                 rightMapProperties.renderer=changeRender(rightMapProperties.renderer);
                 rightMapProperties.travelZoneLayer.setRenderer(rightMapProperties.renderer);
                 rightMapProperties.travelZoneLayer.redraw();
-
             });
         }
     });
-
 }
 
-//convert csv array into good format(zone-to-zone).
-//read csv file into a 2d matrix
+//calculate 1d accessibility array based on a 2d matrix.
 function buildMatrixLookup(arr) {
     var lookup = {};
     var logsumOfLogsum = {};
     var reverseLogsumOfLogsum={};
     var index = arr.columns;
     var verbal = index[0];
-
     for(var i =0; i<arr.length;i++){
         var k = arr[i][verbal];
         delete arr[i][verbal];
         lookup[parseInt(k)] = Object.keys(arr[i]).reduce((obj, key) => (obj[parseInt(key)] = Number(arr[i][key]),obj), {});
     }
-
     for(var i in lookup){
         var total = 0;
         var reverseTotal = 0
-
         for(var j in lookup[i]){
-
             total += Math.exp(lookup[i][j]);
             reverseTotal += Math.exp(lookup[j][i]);
-
         }
-
         logsumOfLogsum[i] =  getBaseLog(2.718,total);
         reverseLogsumOfLogsum[i] = getBaseLog(2.718,reverseTotal);
     }
-
     return [logsumOfLogsum,reverseLogsumOfLogsum];
 }
 
@@ -299,9 +277,8 @@ function getBaseLog(x, y) {
     return Math.log(y) / Math.log(x);
 }
 
-
+//prevent back button
 if( window.history && window.history.pushState ){
-
     history.pushState( "nohb", null, "" );
     $(window).on( "popstate", function(event){
         if( !event.originalEvent.state ){

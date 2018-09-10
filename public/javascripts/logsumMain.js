@@ -3,13 +3,10 @@ This script is used to show the accessibility of two dataset. The accessibility 
 The maps will be static ones. The user can't interact with maps, but there is a toggle button on the left corner of each map.
 Toggle button is unchecked: 'Origin to Destination', and is checked: 'Destination to Origin'
  */
-
-//selection.js stored the dataset name info in the url and pass it to this script
-var url = window.location.href.split('#');
+var url = window.location.href.split('#');//selection.js stored the dataset name info in the url and pass it to this script
 var q = d3.queue();
 var sort = [];//store the left map's zone[101] sorted data as legend reference
 var difference = false;//Record 'See Difference' button status
-
 var mapProperties = {
     'map':null,
     'csvFileName':null,
@@ -24,6 +21,7 @@ var mapProperties = {
     'renderer':null
 
 };
+//create two mapproperties objects with seperate initialization
 var leftMapProperties = JSON.parse(JSON.stringify(mapProperties));
 leftMapProperties.csvFileName = '../data/'+url[1].split('&')[0]+'/'+url[1].split('&')[1];
 leftMapProperties.mapDivId='map';
@@ -45,6 +43,7 @@ else{//if datasets are the same
         .await(brushMap);
 }
 function brushMap(error,csvFile1,csvFile2){
+    //add subtitles based on the user's selection
     $('#title1').text(url[1].split('&')[0]+' '+url[1].split('&')[1].split('.')[0].split('Logsum')[1]);
     $('#title2').text(url[2].split('&')[0]+' '+url[2].split('&')[1].split('.')[0].split('Logsum')[1]);
     if(typeof(csvFile2)==='undefined'){//if two datasets are different
@@ -54,7 +53,6 @@ function brushMap(error,csvFile1,csvFile2){
         leftMapProperties.dataMatrix =buildMatrixLookup(csvFile1);
         rightMapProperties.dataMatrix = buildMatrixLookup(csvFile2);
     }
-
     $('#wait').hide();
     require([
         "esri/geometry/Polyline",
@@ -75,11 +73,10 @@ function brushMap(error,csvFile1,csvFile2){
                 ClassBreaksRenderer,
                 Color
     ) {
-
         plotMap(leftMapProperties);
         plotMap(rightMapProperties);
         /*
-        Plot left map.
+        plot map
          */
         function plotMap(mapProperties) {
             var popup = new Popup({
@@ -87,7 +84,7 @@ function brushMap(error,csvFile1,csvFile2){
                     new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
                         new Color([255, 0, 0]), 2)
             }, domConstruct.create("div"));
-
+            //map initialization
             mapProperties.map = new Map(mapProperties.mapDivId, {
                 basemap: "dark-gray-vector",
                 center: [-113.4909, 53.5444],
@@ -97,8 +94,6 @@ function brushMap(error,csvFile1,csvFile2){
                 slider: false
             });
             mapProperties.map.setInfoWindowOnClick(true);
-
-
             //travelZonelayer
             mapProperties.travelZoneLayer = new FeatureLayer("https://services8.arcgis.com/FCQ1UtL7vfUUEwH7/arcgis/rest/services/newestTAZ/FeatureServer/0", {
                 mode: FeatureLayer.MODE_SNAPSHOT,
@@ -126,6 +121,7 @@ function brushMap(error,csvFile1,csvFile2){
             mapProperties.travelZoneLayer.on('mouse-over', function (evt) {
                 var graphic = evt.graphic;
                 mapProperties.hoverZone = graphic.attributes.TAZ_New;
+                //generate info window when mousing over the zone
                 var access;
                 if (mapProperties.check === false) {
                     access = mapProperties.dataMatrix[mapProperties.selectZone][mapProperties.hoverZone];
@@ -133,7 +129,6 @@ function brushMap(error,csvFile1,csvFile2){
                 else {
                     access = mapProperties.dataMatrix[mapProperties.hoverZone][mapProperties.selectZone];
                 }
-
                 mapProperties.map.infoWindow.setTitle("<b>Zone Number: </b>" + mapProperties.hoverZone);
                 if (typeof(access) !== 'undefined') {
                     mapProperties.map.infoWindow.setContent("<b><font size=\"3\"> Value:</font> </b>" + "<font size=\"4\">" + access.toFixed(2) + "</font>");
@@ -143,12 +138,13 @@ function brushMap(error,csvFile1,csvFile2){
                 }
                 mapProperties.map.infoWindow.show(evt.screenPoint, mapProperties.map.getInfoWindowAnchor(evt.screenPoint));
             });
-            //adjust the legend range dynamically based on current matrix
+            //adjust the legend range dynamically based on left map's datamatrix
             var largestIndividualArray = findRangeForIndividualCalcultion();
             sort = Object.values(largestIndividualArray).sort((prev, next) => prev - next); //from smallest to largest
             sort = sort.map(x => x.toFixed(2)); //make legend to 2 decimal numbers.
 
             var symbol = new SimpleFillSymbol();
+            //make class break renderer for this map. Add color on the map.
             mapProperties.renderer = new ClassBreaksRenderer(symbol, function (feature) {
                 if (mapProperties.check === false) {
                     return mapProperties.dataMatrix[mapProperties.selectZone][feature.attributes.TAZ_New];
@@ -157,17 +153,16 @@ function brushMap(error,csvFile1,csvFile2){
                     return mapProperties.dataMatrix[feature.attributes.TAZ_New][mapProperties.selectZone];
                 }
             });
-            //legend. If you want to change legend scale or legend color, this part of code needs to be modified
+            //renew the renderer
             mapProperties.renderer=changeRender(mapProperties.renderer);
             mapProperties.travelZoneLayer.setRenderer(mapProperties.renderer);
-            //legend
+            //add layers
             mapProperties.map.on('load', function () {
                 mapProperties.map.addLayer(mapProperties.travelZoneLayer);
                 mapProperties.map.addLayer(mapProperties.lrtFeatureLayer);
                 mapProperties.travelZoneLayer.redraw();
             });
-
-
+            //for infowindow
             function pointToExtent(map, point, toleranceInPixel) {
                 var pixelWidth = map.extent.getWidth() / map.width;
                 var toleranceInMapCoords = toleranceInPixel * pixelWidth;
@@ -190,9 +185,8 @@ function brushMap(error,csvFile1,csvFile2){
 
                 }
             });
-
         }
-
+        //if 'sort' array changes, call this function will renew the renderer
         function changeRender(renderer){
             var chunkZones = 89;
             renderer.addBreak(-Infinity, sort[chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([255, 255, 255,0.90])));
@@ -217,6 +211,10 @@ function brushMap(error,csvFile1,csvFile2){
             return renderer;
         }
         subtractMap();
+        /*
+        Clicking on 'see differerence' button will call this function. This function will hide the left map and only leave the right side map.
+        The dataset will be 'leftmap's datamatrix' minus 'right's datamatrix'.
+         */
         function subtractMap(){
             $('#subtractButton').on('click',function() {
                 rightMapProperties.map.centerAt([-114,53.5444]);
@@ -227,7 +225,6 @@ function brushMap(error,csvFile1,csvFile2){
                 $('#section1').hide();
                 $('#section2').width("100%");
                 $('#section2').height("95%");
-
                 $('#'+rightMapProperties.mapDivId).height('100%');
                 $('#subtractButton').hide();
                 difference = true;
@@ -249,7 +246,6 @@ function brushMap(error,csvFile1,csvFile2){
             });
         }
     });
-
 }
 
 //convert csv array into good format(zone-to-zone).
@@ -262,7 +258,6 @@ function buildMatrixLookup(arr) {
         delete arr[i][verbal];
         lookup[parseInt(k)] = Object.keys(arr[i]).reduce((obj, key) => (obj[parseInt(key)] = Number(arr[i][key]),obj), {});
     }
-
     return lookup;
 }
 //the legend range is based on the data for zone101
@@ -272,14 +267,13 @@ function findRangeForIndividualCalcultion(){
         var list = {};
         for(var k in leftMapProperties.dataMatrix['101']){
             list[k] = leftMapProperties.dataMatrix['101'][k]-rightMapProperties.dataMatrix['101'][k]
-
         }
         return list;
     }
     return leftMapProperties.dataMatrix['101'];
 }
+//prevent back button
 if( window.history && window.history.pushState ){
-
     history.pushState( "nohb", null, "" );
     $(window).on( "popstate", function(event){
         if( !event.originalEvent.state ){
