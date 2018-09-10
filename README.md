@@ -43,4 +43,5 @@ All the logsum data set is provided by Cherry. If you just want to simply renew 
       * renderer.addBreak(70, 150, new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([249, 238, 237,0.90])));      
 #### Woops, the App can't run after changing a new dataset:
  1. You need to restart the server from terminal/cmd (Rerun 'npm start').
+ 2. If it still runs into error, you may need to compare the new dataset and the old dataset. Make sure everything is the same, except numbers.
 
