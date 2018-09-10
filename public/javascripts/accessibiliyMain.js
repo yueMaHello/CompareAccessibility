@@ -307,9 +307,12 @@ function brushMap(error,csvFile1,csvFile2){
                     map2.centerAt([-114,53.5444]);
                     $('#subtractButton').hide();
                     $('#map2').height('100%');
-                    $('#title2').text($('#title1').text()+' - '+$('#title2').text());
+                    $('#title').text('Compare Accessibility: '+' '+$('#title1').text()+' - '+$('#title2').text());
+                    $('#title2').hide();
                     $('#section1').hide();
                     $('#section2').width("100%");
+                    $('#section2').height("95%");
+
                     difference = true;
                     var list = {};
                     for(var k in dataMatrix){
@@ -403,3 +406,13 @@ function getBaseLog(x, y) {
 }
 
 
+if( window.history && window.history.pushState ){
+
+    history.pushState( "nohb", null, "" );
+    $(window).on( "popstate", function(event){
+        if( !event.originalEvent.state ){
+            history.pushState( "nohb", null, "" );
+            return;
+        }
+    });
+}
