@@ -24,6 +24,7 @@ router.get('/viewAccessibility', function(req, res, next) {
     res.render('indexAccessibility', { title: "Compare Accessibility"});
 });
 
+
 router.get('/', function(req, res, next) {
     res.render('selection', { title: "Compare Accessibility"});
 });
