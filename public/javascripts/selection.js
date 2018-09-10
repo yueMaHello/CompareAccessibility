@@ -43,6 +43,7 @@ var selection = {
 
 var leftselection =JSON.parse(JSON.stringify(selection));
 var rightselection =JSON.parse(JSON.stringify(selection));
+//Divs object stores the Div ids for UI elements
 var leftDivs={
     'PurposeDiv':'leftPurpose',
     'DynamicDiv':'leftDynamic',
@@ -63,7 +64,7 @@ var rightDivs={
     'OtherPurpose':'rightOtherPurpose',
     'OtherCar':'rightOtherCar'
 };
-//When the user select a travel purpose, the webpage will dynamically change the selection divs
+//When the user selects a travel purpose, the webpage will dynamically change the selection divs
 generateHalfUI(leftselection, leftDivs);
 generateHalfUI(rightselection, rightDivs);
 function generateHalfUI(selectionObject, divObject){
