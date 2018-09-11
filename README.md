@@ -1,5 +1,5 @@
 # Compare Accessibility
-This is a Nodejs web application using Arcgis Javascript API. It can display two sets of data side by side at the same time. The user can also see a subtraction result of the selected two sets of data.
+This is a Nodejs web application using Arcgis Javascript API. It can display two sets of data side by side at the same time. The user can also see a subtraction result of the two sets of data.
 ## Set Up
 #### From Github:
 1. If you haven't set up Nodejs on your computer, you need to download it and add it into PATH.
