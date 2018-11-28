@@ -40,7 +40,6 @@ var selection = {
     },
 };
 
-
 var leftselection =JSON.parse(JSON.stringify(selection));
 var rightselection =JSON.parse(JSON.stringify(selection));
 //Divs object stores the Div ids for UI elements
@@ -142,14 +141,12 @@ function generateHalfUI(selectionObject, divObject){
                 selectionObject['Other (By Purpose)']['Car'] = nameDictionary[this.value];
 
             })
-
         }
-
     });
-
-
 }
-
+//add clicking event to submit button
+//the user will be asked to choose which view he wants
+//if he choose accessibility, then the accessibilitymain.js will be called, and vice versa.
 $('#SubmitButton').on('click',function(){
     var leftCSV = checkAndReturnValue(leftselection);
     var rightCSV=checkAndReturnValue(rightselection);
@@ -158,17 +155,14 @@ $('#SubmitButton').on('click',function(){
             title:'Choose View',
             message: 'Please select a view type!',
             buttons: [{
-
                 label: 'Logsum',
                 // no title as it is optional
-
                 action: function(){
                     window.location.href = '/viewLogsum?#'+nameDictionary[leftselection['Selecting']]+'&'+leftCSV+'#'+nameDictionary[rightselection['Selecting']]+'&'+rightCSV;
-
                 }
             },  {
                 label: 'Accessibility',
-                action: function(dialogItself){
+                action: function(){
                     window.location.href = '/viewAccessibility?#'+nameDictionary[leftselection['Selecting']]+'&'+leftCSV+'#'+nameDictionary[rightselection['Selecting']]+'&'+rightCSV;
                 }
             }, {
@@ -182,6 +176,7 @@ $('#SubmitButton').on('click',function(){
     }
 
 });
+//get the csv file's name based on the user's selections
 function checkAndReturnValue(s){
     if(s['Selecting'] === null || s['Selecting']==='Please Select'){
 
@@ -199,14 +194,12 @@ function checkAndReturnValue(s){
     }
     else if(s['Selecting'] === 'Post Secondary Education'){
         return 'Logsum'+s['Post Secondary Education']['Car']+'.csv'
-
     }
     else if(s['Selecting'] === 'Other (All)'){
         return 'Logsum'+s['Other (All)']['Car']+'.csv'
     }
     else if(s['Selecting'] === 'Other (By Purpose)'){
         return 'Logsum'+s['Other (By Purpose)']['Purpose']+'_'+s['Other (By Purpose)']['Car']+'.csv'
-
     }
 }
 

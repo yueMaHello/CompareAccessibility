@@ -4,7 +4,7 @@ The maps will be static ones. The user can't interact with maps, but there is a 
 Toggle button is unchecked: 'Origin to Destination', and is checked: 'Destination to Origin'
  */
 var url = window.location.href.split('#');//selection.js stored the dataset name info in the url and pass it to this script
-var q = d3.queue();
+var q = d3.queue();//just a queue initialization
 var sort = [];//store the left map's zone[101] sorted data as legend reference
 var difference = false;//Record 'See Difference' button status
 var mapProperties = {
@@ -21,7 +21,7 @@ var mapProperties = {
     'renderer':null
 
 };
-//create two mapproperties objects with seperate initialization
+//create two 'MapProperties' objects with seperate initialization
 var leftMapProperties = JSON.parse(JSON.stringify(mapProperties));
 leftMapProperties.csvFileName = '../data/'+url[1].split('&')[0]+'/'+url[1].split('&')[1];
 leftMapProperties.mapDivId='map';
@@ -42,6 +42,7 @@ else{//if datasets are the same
     q.defer(d3.csv,leftMapProperties.csvFileName)
         .await(brushMap);
 }
+//main function
 function brushMap(error,csvFile1,csvFile2){
     //add subtitles based on the user's selection
     $('#title1').text(url[1].split('&')[0]+' '+url[1].split('&')[1].split('.')[0].split('Logsum')[1]);
@@ -118,26 +119,26 @@ function brushMap(error,csvFile1,csvFile2){
                 mapProperties.travelZoneLayer.redraw();
             })
             //mouse over event
-            mapProperties.travelZoneLayer.on('mouse-over', function (evt) {
-                var graphic = evt.graphic;
-                mapProperties.hoverZone = graphic.attributes.TAZ_New;
-                //generate info window when mousing over the zone
-                var access;
-                if (mapProperties.check === false) {
-                    access = mapProperties.dataMatrix[mapProperties.selectZone][mapProperties.hoverZone];
-                }
-                else {
-                    access = mapProperties.dataMatrix[mapProperties.hoverZone][mapProperties.selectZone];
-                }
-                mapProperties.map.infoWindow.setTitle("<b>Zone Number: </b>" + mapProperties.hoverZone);
-                if (typeof(access) !== 'undefined') {
-                    mapProperties.map.infoWindow.setContent("<b><font size=\"3\"> Value:</font> </b>" + "<font size=\"4\">" + access.toFixed(2) + "</font>");
-                }
-                else {
-                    mapProperties.map.infoWindow.setContent("<b><font size=\"3\"> Value:</font> </b>" + "<font size=\"4\">" + 'undefined' + "</font>");
-                }
-                mapProperties.map.infoWindow.show(evt.screenPoint, mapProperties.map.getInfoWindowAnchor(evt.screenPoint));
-            });
+            // mapProperties.travelZoneLayer.on('mouse-over', function (evt) {
+            //     var graphic = evt.graphic;
+            //     mapProperties.hoverZone = graphic.attributes.TAZ_New;
+            //     //generate info window when mousing over the zone
+            //     var access;
+            //     if (mapProperties.check === false) {
+            //         access = mapProperties.dataMatrix[mapProperties.selectZone][mapProperties.hoverZone];
+            //     }
+            //     else {
+            //         access = mapProperties.dataMatrix[mapProperties.hoverZone][mapProperties.selectZone];
+            //     }
+            //     mapProperties.map.infoWindow.setTitle("<b>Zone Number: </b>" + mapProperties.hoverZone);
+            //     if (typeof(access) !== 'undefined') {
+            //         mapProperties.map.infoWindow.setContent("<b><font size=\"3\"> Value:</font> </b>" + "<font size=\"4\">" + access.toFixed(2) + "</font>");
+            //     }
+            //     else {
+            //         mapProperties.map.infoWindow.setContent("<b><font size=\"3\"> Value:</font> </b>" + "<font size=\"4\">" + 'undefined' + "</font>");
+            //     }
+            //     mapProperties.map.infoWindow.show(evt.screenPoint, mapProperties.map.getInfoWindowAnchor(evt.screenPoint));
+            // });
             //adjust the legend range dynamically based on left map's datamatrix
             var largestIndividualArray = findRangeForIndividualCalcultion();
             sort = Object.values(largestIndividualArray).sort((prev, next) => prev - next); //from smallest to largest

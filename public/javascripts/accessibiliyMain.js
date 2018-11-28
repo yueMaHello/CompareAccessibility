@@ -22,6 +22,7 @@ var mapProperties = {
     'lrtFeatureLayer':null,
     'renderer':null
 };
+//initialize variables
 var leftMapProperties = JSON.parse(JSON.stringify(mapProperties));
 leftMapProperties.csvFileName = '../data/'+url[1].split('&')[0]+'/'+url[1].split('&')[1];
 leftMapProperties.mapDivId='map';
@@ -33,25 +34,29 @@ rightMapProperties.mapDivId='map2';
 rightMapProperties.interactButtonId = 'interact2';
 
 $('#wait').show();//Show loading gif
-if(leftMapProperties.csvFileName!==rightMapProperties.csvFileName ){ //if datasets are different
+//if datasets are different
+if(leftMapProperties.csvFileName!==rightMapProperties.csvFileName ){
     q.defer(d3.csv,leftMapProperties.csvFileName)
         .defer(d3.csv,rightMapProperties.csvFileName )
         .await(brushMap);
 }
-else{//if datasets are the same
+//if datasets are the same
+else{
     q.defer(d3.csv,leftMapProperties.csvFileName)
         .await(brushMap);
 }
-
+//main function
 function brushMap(error,csvFile1,csvFile2){
     $('#title1').text(url[1].split('&')[0]+' '+url[1].split('&')[1].split('.')[0].split('Logsum')[1]); //left map title
     $('#title2').text(url[2].split('&')[0]+' '+url[2].split('&')[1].split('.')[0].split('Logsum')[1]); // right map title
-    if(typeof(csvFile2)==='undefined'){//if two datasets are different
+    //if two datasets are different
+    if(typeof(csvFile2)==='undefined'){
         var result = buildMatrixLookup(csvFile1);
         leftMapProperties.dataMatrix = rightMapProperties.dataMatrix = result[0];
         leftMapProperties.reverseDataMatrix = rightMapProperties.reverseDataMatrix = result[1];
     }
-    else{//if two datasets are same
+    //if two datasets are same
+    else{
         var result1 = buildMatrixLookup(csvFile1);
         leftMapProperties.dataMatrix = result1[0];
         leftMapProperties.reverseDataMatrix = result1[1];
@@ -83,9 +88,7 @@ function brushMap(error,csvFile1,csvFile2){
     ) {
         plotMap(leftMapProperties);
         plotMap(rightMapProperties);
-        /*
-        Plot left map.
-         */
+        //add color to the map
         function plotMap(mapProperties){
             var popup = new Popup({
                 fillSymbol:
@@ -123,26 +126,26 @@ function brushMap(error,csvFile1,csvFile2){
                 mapProperties.map.infoWindow.show(event.mapPoint);
             });
             //mouse over event. Show an infowindow with accessibility value
-            mapProperties.travelZoneLayer.on('mouse-over',function(evt){
-                var graphic = evt.graphic;
-                mapProperties.hoverZone = graphic.attributes.TAZ_New;
-                var access;
-                if(mapProperties.check === false){
-                    access = mapProperties.dataMatrix[mapProperties.hoverZone];
-                }
-                else{
-                    access = mapProperties.reverseDataMatrix[mapProperties.hoverZone];
-                }
-
-                mapProperties.map.infoWindow.setTitle("<b>Zone Number: </b>"+mapProperties.hoverZone);
-                if(typeof(access)!=='undefined'){
-                    mapProperties.map.infoWindow.setContent("<b><font size=\"3\"> Value:</font> </b>"+ "<font size=\"4\">"+access.toFixed(2)+"</font>");
-                }
-                else{
-                    mapProperties.map.infoWindow.setContent("<b><font size=\"3\"> Value:</font> </b>"+ "<font size=\"4\">"+'undefined'+"</font>");
-                }
-                mapProperties.map.infoWindow.show(evt.screenPoint,mapProperties.map.getInfoWindowAnchor(evt.screenPoint));
-            });
+            // mapProperties.travelZoneLayer.on('mouse-over',function(evt){
+            //     var graphic = evt.graphic;
+            //     mapProperties.hoverZone = graphic.attributes.TAZ_New;
+            //     var access;
+            //     if(mapProperties.check === false){
+            //         access = mapProperties.dataMatrix[mapProperties.hoverZone];
+            //     }
+            //     else{
+            //         access = mapProperties.reverseDataMatrix[mapProperties.hoverZone];
+            //     }
+            //
+            //     mapProperties.map.infoWindow.setTitle("<b>Zone Number: </b>"+mapProperties.hoverZone);
+            //     if(typeof(access)!=='undefined'){
+            //         mapProperties.map.infoWindow.setContent("<b><font size=\"3\"> Value:</font> </b>"+ "<font size=\"4\">"+access.toFixed(2)+"</font>");
+            //     }
+            //     else{
+            //         mapProperties.map.infoWindow.setContent("<b><font size=\"3\"> Value:</font> </b>"+ "<font size=\"4\">"+'undefined'+"</font>");
+            //     }
+            //     mapProperties.map.infoWindow.show(evt.screenPoint,mapProperties.map.getInfoWindowAnchor(evt.screenPoint));
+            // });
 
             sort =  Object.values(leftMapProperties.dataMatrix).sort(function(a, b){return a - b});
 
@@ -213,6 +216,8 @@ function brushMap(error,csvFile1,csvFile2){
             return renderer;
         }
         subtractMap();
+        //after clicking the 'see difference button', the left matrix will subtract the right matrix.
+        //The subtraction matrix will be plotted show on the map.
         function subtractMap(){
             $('#subtractButton').on('click',function() {
                 rightMapProperties.map.centerAt([-114,53.5444]);
@@ -228,7 +233,6 @@ function brushMap(error,csvFile1,csvFile2){
                 var list = {};
                 for(var k in leftMapProperties.dataMatrix){
                     list[k] = leftMapProperties.dataMatrix[k]-rightMapProperties.dataMatrix[k]
-
                 }
                 sort =  Object.values(list).sort(function(a, b){return a - b});
                 var symbol = new SimpleFillSymbol();
@@ -272,7 +276,7 @@ function buildMatrixLookup(arr) {
     }
     return [logsumOfLogsum,reverseLogsumOfLogsum];
 }
-
+//log
 function getBaseLog(x, y) {
     return Math.log(y) / Math.log(x);
 }
