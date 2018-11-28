@@ -8,29 +8,25 @@ block content
     div(class ="container-fluid")
         div(class ="row")
             div(class ="col-md-6 col-sm-6")
-
                 h3 Left Map
-                label(for="leftPurpose") Select Travel Purpose:
-                select(id = 'leftPurpose' class="form-control")
-                    option Please Select
-                    option Work
-                    option Post Secondary Education
-                    //option Grade School
-                    option Other (All)
-                    option Other (By Purpose)
+                div(id='leftSelection')
+                    label(for="leftLevelOne") Select Travel Purpose:
+                    div(class = 'selection' id='leftLevelOne')
+                    div(class = 'selection' id='leftLevelTwo')
+                    div(class = 'selection' id='leftLevelThree')
+                    div(class = 'selection' id='leftLevelFour')
                 div(id = 'leftDynamic')
 
 
             div(class ="col-md-6 col-sm-6")
                 h3 Right Map
-                label(for="rightPurpose") Select Travel Purpose:
-                select(id = 'rightPurpose' class="form-control")
-                    option Please Select
-                    option Work
-                    option Post Secondary Education
-                    //option Grade School
-                    option Other (All)
-                    option Other (By Purpose)
+
+                div(id='rightSelection')
+                    label(for="rightLevelOne") Select Travel Purpose:
+                    div(class = 'selection' id='rightLevelOne')
+                    div(class = 'selection' id='rightLevelTwo')
+                    div(class = 'selection' id='rightLevelThree')
+                    div(class = 'selection' id='rightLevelFour')
                 div(id = 'rightDynamic')
 
     input(id = 'SubmitButton' type='button' class="btn btn-secondary btn-lg" value = 'Submit')

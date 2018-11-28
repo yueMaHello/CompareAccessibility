@@ -23,12 +23,12 @@ var mapProperties = {
 };
 //create two 'MapProperties' objects with seperate initialization
 var leftMapProperties = JSON.parse(JSON.stringify(mapProperties));
-leftMapProperties.csvFileName = '../data/'+url[1].split('&')[0]+'/'+url[1].split('&')[1];
+leftMapProperties.csvFileName = url[1];
 leftMapProperties.mapDivId='map';
 leftMapProperties.interactButtonId = 'interact';
 
 var rightMapProperties = JSON.parse(JSON.stringify(mapProperties));
-rightMapProperties.csvFileName = '../data/'+url[2].split('&')[0]+'/'+url[2].split('&')[1];
+rightMapProperties.csvFileName = url[2];
 rightMapProperties.mapDivId='map2';
 rightMapProperties.interactButtonId = 'interact2';
 
@@ -45,8 +45,13 @@ else{//if datasets are the same
 //main function
 function brushMap(error,csvFile1,csvFile2){
     //add subtitles based on the user's selection
-    $('#title1').text(url[1].split('&')[0]+' '+url[1].split('&')[1].split('.')[0].split('Logsum')[1]);
-    $('#title2').text(url[2].split('&')[0]+' '+url[2].split('&')[1].split('.')[0].split('Logsum')[1]);
+    //
+    let leftName = decodeURI(leftMapProperties.csvFileName).replace('./data/','').replace('.csv','').split("/").join(", ");
+    let rightName = decodeURI(rightMapProperties.csvFileName).replace('./data/','').replace('.csv','').split("/").join(", ");
+    $('#title1').text(leftName);
+    $('#title2').text(rightName);
+
+    // $('#title2').text(url[2].split('&')[0]+' '+url[2].split('&')[1].split('.')[0].split('Logsum')[1]);
     if(typeof(csvFile2)==='undefined'){//if two datasets are different
         leftMapProperties.dataMatrix = rightMapProperties.dataMatrix =buildMatrixLookup(csvFile1);
     }
@@ -64,22 +69,25 @@ function brushMap(error,csvFile1,csvFile2){
         "esri/dijit/PopupTemplate",
         "dojo/dom-class",
         "esri/map", "esri/layers/FeatureLayer",
-        "esri/InfoTemplate", "esri/symbols/SimpleFillSymbol", "esri/symbols/SimpleLineSymbol",
+        "esri/InfoTemplate", "esri/symbols/SimpleFillSymbol", "esri/symbols/SimpleLineSymbol","esri/layers/GraphicsLayer", "esri/graphic",
         "esri/renderers/ClassBreaksRenderer",
         "esri/Color","dojo/domReady!"
     ], function(Polyline,
                 Extent,domConstruct,
                 Query,Popup, PopupTemplate,domClass,Map, FeatureLayer,
-                InfoTemplate, SimpleFillSymbol,SimpleLineSymbol,
+                InfoTemplate, SimpleFillSymbol,SimpleLineSymbol,GraphicsLayer, Graphic,
                 ClassBreaksRenderer,
                 Color
     ) {
+
         plotMap(leftMapProperties);
         plotMap(rightMapProperties);
         /*
         plot map
          */
         function plotMap(mapProperties) {
+            let highLightLayer = new GraphicsLayer({ id: "highLightLayer" });
+
             var popup = new Popup({
                 fillSymbol:
                     new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
@@ -112,33 +120,26 @@ function brushMap(error,csvFile1,csvFile2){
                 mapProperties.selectZone = graphic.attributes.TAZ_New;
                 var query = new Query();
                 query.geometry = pointToExtent(mapProperties.map, event.mapPoint, 10);
-                var deferred = mapProperties.travelZoneLayer.selectFeatures(query,
-                    mapProperties.travelZoneLayer.SELECTION_NEW);
-                mapProperties.map.infoWindow.setFeatures([deferred]);
-                mapProperties.map.infoWindow.show(event.mapPoint);
                 mapProperties.travelZoneLayer.redraw();
-            })
-            //mouse over event
-            // mapProperties.travelZoneLayer.on('mouse-over', function (evt) {
-            //     var graphic = evt.graphic;
-            //     mapProperties.hoverZone = graphic.attributes.TAZ_New;
-            //     //generate info window when mousing over the zone
-            //     var access;
-            //     if (mapProperties.check === false) {
-            //         access = mapProperties.dataMatrix[mapProperties.selectZone][mapProperties.hoverZone];
-            //     }
-            //     else {
-            //         access = mapProperties.dataMatrix[mapProperties.hoverZone][mapProperties.selectZone];
-            //     }
-            //     mapProperties.map.infoWindow.setTitle("<b>Zone Number: </b>" + mapProperties.hoverZone);
-            //     if (typeof(access) !== 'undefined') {
-            //         mapProperties.map.infoWindow.setContent("<b><font size=\"3\"> Value:</font> </b>" + "<font size=\"4\">" + access.toFixed(2) + "</font>");
-            //     }
-            //     else {
-            //         mapProperties.map.infoWindow.setContent("<b><font size=\"3\"> Value:</font> </b>" + "<font size=\"4\">" + 'undefined' + "</font>");
-            //     }
-            //     mapProperties.map.infoWindow.show(evt.screenPoint, mapProperties.map.getInfoWindowAnchor(evt.screenPoint));
-            // });
+                mapProperties.map.removeLayer(highLightLayer);
+                highLightLayer = new GraphicsLayer({ id: "highLightLayer" });
+
+                let highlightSymbol = new SimpleFillSymbol(
+                    SimpleFillSymbol.STYLE_SOLID,
+                    new SimpleLineSymbol(
+                        SimpleLineSymbol.STYLE_SOLID,
+                        new Color([0,225,225]), 2
+                    ),
+                    new Color([0,225,225,0.5])
+                );
+
+                let highLightGraphic = new Graphic(evt.graphic.geometry,highlightSymbol);
+                highLightLayer.add(highLightGraphic);
+                mapProperties.map.addLayer(highLightLayer);
+
+
+            });
+
             //adjust the legend range dynamically based on left map's datamatrix
             var largestIndividualArray = findRangeForIndividualCalcultion();
             sort = Object.values(largestIndividualArray).sort((prev, next) => prev - next); //from smallest to largest
@@ -273,13 +274,13 @@ function findRangeForIndividualCalcultion(){
     }
     return leftMapProperties.dataMatrix['101'];
 }
-//prevent back button
-if( window.history && window.history.pushState ){
-    history.pushState( "nohb", null, "" );
-    $(window).on( "popstate", function(event){
-        if( !event.originalEvent.state ){
-            history.pushState( "nohb", null, "" );
-            return;
-        }
-    });
-}
+// //prevent back button
+// if( window.history && window.history.pushState ){
+//     history.pushState( "nohb", null, "" );
+//     $(window).on( "popstate", function(event){
+//         if( !event.originalEvent.state ){
+//             history.pushState( "nohb", null, "" );
+//             return;
+//         }
+//     });
+// }
