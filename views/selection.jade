@@ -32,6 +32,6 @@ block content
     input(id = 'SubmitButton' type='button' class="btn btn-secondary btn-lg" value = 'Submit')
     script.
         console.log($('#map').attr('id'))
-
+        var sliderType = !{JSON.stringify(sliderType)};
         var title = !{JSON.stringify(title)};
     script(src="/javascripts/selection.js")

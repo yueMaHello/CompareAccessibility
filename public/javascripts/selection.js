@@ -2,36 +2,36 @@
 full name is used to display on the browser. Short name is used to figure out the csv file's full address
 */
 
-var sliderType = {
-    'Work':{
-        'High':['Insuff Car','No Car','Suff Car','Need Car At Work'],
-        'Low':['Insuff Car','No Car','Suff Car','Need Car At Work'],
-        'Medium':['Insuff Car','No Car','Suff Car','Need Car At Work'],
-    },
-    'PSE':['Insuff Car','No Car','Suff Car'],
-
-    'GS':{
-        'Elementary School':['Insuff Car','No Car','Suff Car'],
-        'Junior High':['Insuff Car','No Car','Suff Car'],
-        'Preschool':['Insuff Car','No Car','Suff Car'],
-        'SHS With License':['Insuff Car','No Car','Suff Car'],
-        'SHS Without License':['Insuff Car','No Car','Suff Car'],
-    },
-    'Other': ['Insuff Car','No Car','Suff Car'],
-    'Otherpurpose':{
-        'Eat':['Insuff Car','No Car','Suff Car'],
-        'PB':['Insuff Car','No Car','Suff Car'],
-        'PUDO':['Insuff Car','No Car','Suff Car'],
-        'QS':['Insuff Car','No Car','Suff Car'],
-        'Rec':['Insuff Car','No Car','Suff Car'],
-        'Shop':['Insuff Car','No Car','Suff Car'],
-        'Soc':['Insuff Car','No Car','Suff Car'],
-        'test':{
-            'test1':['No Car'],
-            'test2':['Suff Car']
-        }
-    }
-};
+// var sliderType = {
+//     'Work':{
+//         'High':['Insuff Car','No Car','Suff Car','Need Car At Work'],
+//         'Low':['Insuff Car','No Car','Suff Car','Need Car At Work'],
+//         'Medium':['Insuff Car','No Car','Suff Car','Need Car At Work'],
+//     },
+//     'PSE':['Insuff Car','No Car','Suff Car'],
+//
+//     'GS':{
+//         'Elementary School':['Insuff Car','No Car','Suff Car'],
+//         'Junior High':['Insuff Car','No Car','Suff Car'],
+//         'Preschool':['Insuff Car','No Car','Suff Car'],
+//         'SHS With License':['Insuff Car','No Car','Suff Car'],
+//         'SHS Without License':['Insuff Car','No Car','Suff Car'],
+//     },
+//     'Other': ['Insuff Car','No Car','Suff Car'],
+//     'Otherpurpose':{
+//         'Eat':['Insuff Car','No Car','Suff Car'],
+//         'PB':['Insuff Car','No Car','Suff Car'],
+//         'PUDO':['Insuff Car','No Car','Suff Car'],
+//         'QS':['Insuff Car','No Car','Suff Car'],
+//         'Rec':['Insuff Car','No Car','Suff Car'],
+//         'Shop':['Insuff Car','No Car','Suff Car'],
+//         'Soc':['Insuff Car','No Car','Suff Car'],
+//         'test':{
+//             'test1':['No Car'],
+//             'test2':['Suff Car']
+//         }
+//     }
+// };
 
 let leftRecord = {
     levelOne:null,
@@ -40,7 +40,7 @@ let leftRecord = {
     levelFour:null,
     filePath:null
 
-}
+};
 
 
 let rightRecord = {
@@ -50,7 +50,7 @@ let rightRecord = {
     levelFour:null,
     filePath:null
 
-}
+};
 
 
 
