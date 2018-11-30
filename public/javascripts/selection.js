@@ -13,7 +13,9 @@ let rightRecord = {
 let maxDepth = checkDepth(sliderType);
 console.log(maxDepth);
 
-for(let i=1;i<maxDepth;i++){
+for(let i=1;i<maxDepth+1;i++){
+    $('#leftSelection').append('<div class="selection" id="left'+i+'"></div>');
+    $('#rightSelection').append('<div class="selection" id="right'+i+'"></div>');
     leftRecord[i] = null;
     rightRecord[i] = null;
 }
@@ -35,14 +37,13 @@ function setHalfSelection(side,halfSideRecord,num,tmpSliderType){
     else {
         $('#' + side + num).append("<select id = '" + side + num+"Selection' class='form-control'></select>");
         $('#' + side + num+'Selection').append('<option>Please Select</option>');
-        for (let k in tmpSliderType) {
+        for (let k=0;k<tmpSliderType.length;k++) {
             $('#' + side + num + 'Selection').append('<option>' + tmpSliderType[k] + '</option>');
         }
         $('#' + side + num + 'Selection').on('change', function () {
-            halfSideRecord[num+1] = this.value;
-            halfSideRecord.filePath = null;
+            halfSideRecord[num] = this.value;
             halfSideRecord.filePath = generateFilePath(num,halfSideRecord);
-            console.log( halfSideRecord.filePath)
+            console.log(halfSideRecord.filePath)
         })
     }
 }
@@ -50,7 +51,7 @@ setHalfSelection('left',leftRecord,1,sliderType);
 setHalfSelection('right',rightRecord,1,sliderType);
 
 function emptyOtherSelection(num,maxValue,side){
-    for(let i=num+1;i<maxValue;i++){
+    for(let i=num+1;i<maxValue+1;i++){
         $('#'+side+i).empty();
     }
 }
@@ -59,7 +60,7 @@ function generateFilePath(num,halfSideRecord){
     for(let i=1;i<num;i++){
         result = result + '/'+halfSideRecord[i]
     }
-    result+='/'+halfSideRecord[num+1]+'.csv';
+    result+='/'+halfSideRecord[num]+'.csv';
     return result
 
 }
@@ -113,34 +114,3 @@ function checkDepth(object){
 
 }
 
-/*
-$('#SubmitButton').on('click',function(){
-    var leftCSV = checkAndReturnValue(leftselection);
-    var rightCSV=checkAndReturnValue(rightselection);
-    if(typeof(leftCSV)!=='undefined'&&typeof(rightCSV)!=='undefined'){
-        BootstrapDialog.show({
-            title:'Choose View',
-            message: 'Please select a view type!',
-            buttons: [{
-                label: 'Logsum',
-                // no title as it is optional
-                action: function(){
-                    window.location.href = '/viewLogsum?#'+nameDictionary[leftselection['Selecting']]+'&'+leftCSV+'#'+nameDictionary[rightselection['Selecting']]+'&'+rightCSV;
-                }
-            },  {
-                label: 'Accessibility',
-                action: function(){
-                    window.location.href = '/viewAccessibility?#'+nameDictionary[leftselection['Selecting']]+'&'+leftCSV+'#'+nameDictionary[rightselection['Selecting']]+'&'+rightCSV;
-                }
-            }, {
-                label: 'Close',
-                action: function(dialogRef){
-                    dialogRef.close();
-                }
-            }]
-        });
-
-    }
-
-});
- */
