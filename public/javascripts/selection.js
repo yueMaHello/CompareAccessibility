@@ -9,9 +9,8 @@ let leftRecord = {
 let rightRecord = {
     filePath:null
 };
-
+let pleaseSelect = 'Please Select';
 let maxDepth = checkDepth(sliderType);
-console.log(maxDepth);
 
 for(let i=1;i<maxDepth+1;i++){
     $('#leftSelection').append('<div class="selection" id="left'+i+'"></div>');
@@ -19,11 +18,11 @@ for(let i=1;i<maxDepth+1;i++){
     leftRecord[i] = null;
     rightRecord[i] = null;
 }
-
+//recursive function. Automatically generate buttons based on the data structure.
 function setHalfSelection(side,halfSideRecord,num,tmpSliderType){
     if(checkDepth(tmpSliderType)>1) {
         $('#' + side + num).append("<select id = '" + side + num+"Selection' class='form-control'></select>");
-        $('#' + side + num+'Selection').append('<option>Please Select</option>');
+        $('#' + side + num+'Selection').append('<option>'+pleaseSelect+'</option>');
         for (let k in tmpSliderType) {
             $('#' + side + num+'Selection').append('<option>' + k + '</option>')
         }
@@ -36,18 +35,19 @@ function setHalfSelection(side,halfSideRecord,num,tmpSliderType){
     }
     else {
         $('#' + side + num).append("<select id = '" + side + num+"Selection' class='form-control'></select>");
-        $('#' + side + num+'Selection').append('<option>Please Select</option>');
+        $('#' + side + num+'Selection').append('<option>'+pleaseSelect+'</option>');
         for (let k=0;k<tmpSliderType.length;k++) {
             $('#' + side + num + 'Selection').append('<option>' + tmpSliderType[k] + '</option>');
         }
         $('#' + side + num + 'Selection').on('change', function () {
             halfSideRecord[num] = this.value;
             halfSideRecord.filePath = generateFilePath(num,halfSideRecord);
-            console.log(halfSideRecord.filePath)
         })
     }
 }
+//set left selection
 setHalfSelection('left',leftRecord,1,sliderType);
+//set right selection
 setHalfSelection('right',rightRecord,1,sliderType);
 
 function emptyOtherSelection(num,maxValue,side){
@@ -64,13 +64,15 @@ function generateFilePath(num,halfSideRecord){
     return result
 
 }
-//Divs object stores the Div ids for UI elements
+
 
 //add clicking event to submit button
 //the user will be asked to choose which view he wants
 //if he choose accessibility, then the accessibilitymain.js will be called, and vice versa.
 $('#SubmitButton').on('click',function(){
-    if(leftRecord.filePath!==null&&rightRecord.filePath!==null){
+
+    if(leftRecord.filePath!==null&&rightRecord.filePath!==null
+        &&leftRecord.filePath.indexOf(pleaseSelect)===-1&&rightRecord.filePath.indexOf(pleaseSelect)===-1){
         BootstrapDialog.show({
             title:'Choose View',
             message: 'Please select a view type!',
@@ -98,7 +100,7 @@ $('#SubmitButton').on('click',function(){
 
     }
 });
-
+//get the maximum depth of an object
 function checkDepth(object){
     var level = 1;
     var key;

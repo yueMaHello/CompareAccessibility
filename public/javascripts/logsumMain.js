@@ -45,13 +45,11 @@ else{//if datasets are the same
 //main function
 function brushMap(error,csvFile1,csvFile2){
     //add subtitles based on the user's selection
-    //
     let leftName = decodeURI(leftMapProperties.csvFileName).replace('./data/','').replace('.csv','').split("/").join(", ");
     let rightName = decodeURI(rightMapProperties.csvFileName).replace('./data/','').replace('.csv','').split("/").join(", ");
     $('#title1').text(leftName);
     $('#title2').text(rightName);
 
-    // $('#title2').text(url[2].split('&')[0]+' '+url[2].split('&')[1].split('.')[0].split('Logsum')[1]);
     if(typeof(csvFile2)==='undefined'){//if two datasets are different
         leftMapProperties.dataMatrix = rightMapProperties.dataMatrix =buildMatrixLookup(csvFile1);
     }
@@ -274,13 +272,3 @@ function findRangeForIndividualCalcultion(){
     }
     return leftMapProperties.dataMatrix['101'];
 }
-// //prevent back button
-// if( window.history && window.history.pushState ){
-//     history.pushState( "nohb", null, "" );
-//     $(window).on( "popstate", function(event){
-//         if( !event.originalEvent.state ){
-//             history.pushState( "nohb", null, "" );
-//             return;
-//         }
-//     });
-// }
