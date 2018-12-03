@@ -31,7 +31,7 @@ This is a Nodejs web application using Arcgis Javascript API. It can display two
 
 ## Tips:
 #### If you want to update the dataset:
-All the logsum data set is provided by Cherry. If you just want to simply renew the dataset without changing the structure or name, you can replace csv files into new ones one by one. However, if you want to change the structure of the data set, then you have to change the code in javascript files.
+All the logsum data set is provided by Cherry. If you just want to simply renew the dataset without changing the structure or name, you can replace csv files into new ones one by one. If you want to change the data structure, it's totally fine since the application will detect your data structure and update the UI.
 #### If you want to update the TravelZoneLayer shape file:
  1. The map layer is not stored in localhost. It is stored in the arcgis online server.
  2. In './public/javascript/accessbilityMain.js' and './public/javascript/logsumMain.js', you can find the current travel zone layer: 'https://services8.arcgis.com/FCQ1UtL7vfUUEwH7/arcgis/rest/services/newestTAZ/FeatureServer/0'. If you want to change it to another layer, you can create you own arcgis online account and upload the layer to the arcgis server. You need to replace the url into a new one. You can also ask Sandeep to access Yue Ma's arcgis account.
