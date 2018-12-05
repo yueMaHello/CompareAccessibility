@@ -28,14 +28,19 @@ function setHalfSelection(side,halfSideRecord,num,tmpSliderType){
         }
         $('#' + side + num+'Selection').on('change', function () {
             halfSideRecord[num] = this.value;
+            console.log(this.value);
             halfSideRecord.filePath = null;
             emptyOtherSelection(num,maxDepth,side);
-            setHalfSelection(side,halfSideRecord,num+1,tmpSliderType[halfSideRecord[num]]);
+            if(this.value!==pleaseSelect){
+                setHalfSelection(side,halfSideRecord,num+1,tmpSliderType[halfSideRecord[num]]);
+            }
+
         });
     }
     else {
         $('#' + side + num).append("<select id = '" + side + num+"Selection' class='form-control'></select>");
         $('#' + side + num+'Selection').append('<option>'+pleaseSelect+'</option>');
+
         for (let k=0;k<tmpSliderType.length;k++) {
             $('#' + side + num + 'Selection').append('<option>' + tmpSliderType[k] + '</option>');
         }
@@ -107,7 +112,7 @@ function checkDepth(object){
     for(key in object) {
         if (!object.hasOwnProperty(key)) continue;
 
-        if(typeof object[key] == 'object'){
+        if(typeof(object[key])=== 'object'){
             var depth = checkDepth(object[key]) + 1;
             level = Math.max(depth, level);
         }
