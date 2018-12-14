@@ -3,6 +3,8 @@ This script is used to show the accessibility of two dataset. The accessibility 
 The maps will be static ones. The user can't interact with maps, but there is a toggle button on the left corner of each map.
 Toggle button is unchecked: 'Origin to Destination', and is checked: 'Destination to Origin'
  */
+//TAZ_New is the id attribute of the travel zone layer
+var travelZoneLayerAttributeID = 'TAZ_New';
 var url = window.location.href.split('#');//selection.js stored the dataset name info in the url and pass it to this script
 var q = d3.queue();//just a queue initialization
 var sort = [];//store the left map's zone[101] sorted data as legend reference
@@ -115,7 +117,7 @@ function brushMap(error,csvFile1,csvFile2){
             //click on travelZoneLayer event
             mapProperties.travelZoneLayer.on('click', function (evt) {
                 var graphic = evt.graphic;
-                mapProperties.selectZone = graphic.attributes.TAZ_New;
+                mapProperties.selectZone = graphic.attributes[travelZoneLayerAttributeID];
                 var query = new Query();
                 query.geometry = pointToExtent(mapProperties.map, event.mapPoint, 10);
                 mapProperties.travelZoneLayer.redraw();
@@ -147,10 +149,10 @@ function brushMap(error,csvFile1,csvFile2){
             //make class break renderer for this map. Add color on the map.
             mapProperties.renderer = new ClassBreaksRenderer(symbol, function (feature) {
                 if (mapProperties.check === false) {
-                    return mapProperties.dataMatrix[mapProperties.selectZone][feature.attributes.TAZ_New];
+                    return mapProperties.dataMatrix[mapProperties.selectZone][feature.attributes[travelZoneLayerAttributeID]];
                 }
                 else {
-                    return mapProperties.dataMatrix[feature.attributes.TAZ_New][mapProperties.selectZone];
+                    return mapProperties.dataMatrix[feature.attributes[travelZoneLayerAttributeID]][mapProperties.selectZone];
                 }
             });
             //renew the renderer
@@ -234,10 +236,10 @@ function brushMap(error,csvFile1,csvFile2){
                 var symbol = new SimpleFillSymbol();
                 rightMapProperties.renderer = new ClassBreaksRenderer(symbol, function(feature){
                     if(rightMapProperties.check === false){
-                        return leftMapProperties.dataMatrix[rightMapProperties.selectZone][feature.attributes.TAZ_New]-rightMapProperties.dataMatrix[rightMapProperties.selectZone][feature.attributes.TAZ_New];
+                        return leftMapProperties.dataMatrix[rightMapProperties.selectZone][feature.attributes[travelZoneLayerAttributeID]]-rightMapProperties.dataMatrix[rightMapProperties.selectZone][feature.attributes[travelZoneLayerAttributeID]];
                     }
                     else{
-                        return leftMapProperties.dataMatrix[feature.attributes.TAZ_New][rightMapProperties.selectZone]-rightMapProperties.dataMatrix[feature.attributes.TAZ_New][rightMapProperties.selectZone];
+                        return leftMapProperties.dataMatrix[feature.attributes[travelZoneLayerAttributeID]][rightMapProperties.selectZone]-rightMapProperties.dataMatrix[feature.attributes[travelZoneLayerAttributeID]][rightMapProperties.selectZone];
                     }
                 });
                 rightMapProperties.renderer=changeRender(rightMapProperties.renderer);
